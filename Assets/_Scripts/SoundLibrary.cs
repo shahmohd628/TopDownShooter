@@ -1,0 +1,36 @@
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+public class SoundLibrary : MonoBehaviour
+{
+    public SoundGroup[] soundGroups;
+
+    Dictionary<string, AudioClip[]> groupDictonary = new Dictionary<string, AudioClip[]>();
+
+    void Awake()
+    {
+        foreach(SoundGroup soundGroup in soundGroups)
+        {
+            groupDictonary.Add (soundGroup.groupId, soundGroup.group);
+        }
+    }
+
+    public AudioClip GetClipFromName(string name)
+    {
+        if(groupDictonary.ContainsKey(name))
+        {
+            AudioClip[] sounds = groupDictonary [name];
+            return sounds[Random.Range(0,sounds.Length)];
+        }
+        return null;
+    }
+
+    [System.Serializable]
+    public class SoundGroup
+    {
+        public string groupId;
+        public AudioClip[] group;
+
+    }
+}
