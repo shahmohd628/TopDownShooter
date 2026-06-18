@@ -149,10 +149,17 @@ public class Enemy : LivingEntity {
 
         // Trigger animation and sound on the same frame so they are in sync
         animator.SetTrigger("Attack");
-        AudioManager.instance.PlaySound("Enemy Attack", transform.position);
 
         // Wait for animation midpoint (~1.1s) then check and apply damage
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
+        if (hasTarget && !dead) {
+        float sqrDst = (target.position - transform.position).sqrMagnitude;
+        float range = attackDistanceThreshold + myCollisionRadius + targetCollisionRadius;
+        if (sqrDst < range * range) {
+            AudioManager.instance.PlaySound("Enemy Attack", transform.position); // moved inside
+            targetEntity.TakeDamage(damage);
+            }
+        }
 
         if (hasTarget && !dead) {
             float sqrDst = (target.position - transform.position).sqrMagnitude;
